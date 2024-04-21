@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\TaskController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -37,8 +38,10 @@ Route::post('sign-up', function(Request $request){
 });
 
 Route::group([
-    'namespace' => 'App\Http\Controllers\Api\V1',
+    'namespace' => 'App\Http\Controllers',
     'middleware' => 'auth:sanctum'
 ], function(){
     Route::apiResource('projects', ProjectController::class);
+    Route::apiResource('tasks', TaskController::class);
+
 });

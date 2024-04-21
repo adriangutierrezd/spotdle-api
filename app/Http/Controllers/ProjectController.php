@@ -25,7 +25,6 @@ class ProjectController extends Controller
         return new ProjectCollection($categories);
     }
 
-
     public function store(StoreProjectRequest $request)
     {
         return new ProjectResource(Project::create([

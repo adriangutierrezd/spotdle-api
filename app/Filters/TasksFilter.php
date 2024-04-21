@@ -3,7 +3,7 @@
 namespace App\Filters;
 use App\Filters\ApiFilter;
 
-class ProjectsFilter extends ApiFilter{
+class TasksFilter extends ApiFilter{
 
     protected $allowedParams = [
         'id' => ['eq'],
