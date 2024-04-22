@@ -18,19 +18,31 @@ class ProjectController extends Controller
     {
         $filter = new ProjectsFilter();
         $queryItems = $filter->transform($request);
-        $categories = Project::where([
+        $projects = Project::where([
             ...$queryItems,
             'user_id' => $request->user()->id
         ])->get();
-        return new ProjectCollection($categories);
+
+        return [
+            'data' => new ProjectCollection($projects),
+            'status' => 200,
+            'message' => 'Datos obtenidos correctamente'
+        ];
     }
 
     public function store(StoreProjectRequest $request)
     {
-        return new ProjectResource(Project::create([
+        $project = new ProjectResource(Project::create([
             ...$request->all(),
             'user_id' => $request->user()->id
         ]));
+
+        return [
+            'data' => $project,
+            'status' => 201,
+            'message' => 'Recurso creado con éxito'
+        ];
+
     }
 
     public function update(UpdateProjectRequest $request, Project $project)
@@ -39,6 +51,12 @@ class ProjectController extends Controller
             ...$request->all(),
             'user_id' => $request->user()->id
         ]);
+
+        return [
+            'data' => $project,
+            'status' => 200,
+            'message' => 'Recurso actualizado con éxito'
+        ];
     }
 
     public function destroy(Request $request, Project $project)
@@ -48,6 +66,12 @@ class ProjectController extends Controller
         }
 
         $project->delete();
+
+        return [
+            'data' => [],
+            'status' => 200,
+            'message' => 'Recurso eliminado con éxito'
+        ];
     }
 
 }

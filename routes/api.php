@@ -16,15 +16,22 @@ Route::post('auth', function(Request $request){
 
     if(Auth::attempt($credentials)){
         $user = Auth::user();
-
         $basicToken = $user->createToken('basic-token');
-
         return [
-            'token' => $basicToken->plainTextToken,
-            'user' => $user
+            'data' => [
+                'token' => $basicToken->plainTextToken,
+                'user' => $user
+            ],
+            'status' => 200,
+            'message' => 'Credenciales correctas'
         ];
-
     }
+
+    return [
+        'data' => [],
+        'status' => 401,
+        'message' => 'Las credenciales no son correctas'
+    ];
 });
 
 Route::post('sign-up', function(Request $request){
