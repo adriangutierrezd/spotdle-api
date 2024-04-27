@@ -27,8 +27,15 @@ class UpdateTaskRequest extends FormRequest
         if($method === 'PUT'){
             return [
                 'description' => ['required', 'max:100'],
-                'projectId' => ['required', 'exists:projects,id'],
-                'running' => ['required', 'boolean'],
+                'projectId' => [
+                    'sometimes',
+                    function ($attribute, $value, $fail) {
+                        if (!is_null($value) && !\App\Models\Project::where('id', $value)->exists()) { 
+                            $fail('El proyecto seleccionado no es válido.');
+    
+                        }
+                    },
+                ],                    'running' => ['required', 'boolean'],
                 'started_at' => ['required', 'date'],
                 'seconds' => ['required', 'integer']
             ];

@@ -32,16 +32,19 @@ class TaskController extends Controller
 
     public function store(StoreTaskRequest $request)
     {
-        $task = new TaskResource(Task::create([
+
+        $task = Task::create([
             ...$request->all(),
             'date' => date('Y-m-d'),
             'seconds' => 0,
             'user_id' => $request->user()->id,
             'started_at' => Carbon::parse($request->started_at)->toDateTimeString()
-        ])->with('project'));
+        ]);
+
+        $task->load('project');
 
         return [
-            'data' => $task,
+            'data' => new TaskResource($task),
             'status' => 201,
             'message' => 'Recurso creado con éxito'
         ];
@@ -54,6 +57,8 @@ class TaskController extends Controller
             ...$request->all(),
             'user_id' => $request->user()->id
         ]);
+
+        $task->load('project');
 
         return [
             'data' => $task,
