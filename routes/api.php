@@ -35,13 +35,28 @@ Route::post('auth', function(Request $request){
 });
 
 Route::post('sign-up', function(Request $request){
-    $user = new User([
-        'name' => $request->name,
-        'email' => $request->email,
-        'password' => Hash::make($request->password)
-    ]);
 
-    $user->save();
+    try{
+        $user = new User([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password)
+        ]);
+    
+        $user->save();
+
+        return [
+            'data' => $user,
+            'status' => 201,
+            'message' => 'Recurso creado con éxito'
+        ];
+    }catch(Exception $e){
+        return [
+            'data' => [],
+            'status' => 500,
+            'message' => 'Ha ocurrido un error'
+        ];
+    }
 });
 
 Route::group([

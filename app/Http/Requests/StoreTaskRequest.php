@@ -29,5 +29,14 @@ class StoreTaskRequest extends FormRequest
             'seconds' => ['sometimes', 'integer']
         ];
     }
+
+    protected function prepareForValidation()
+    {
+        if($this->projectId){
+            $this->merge([
+                'project_id' => $this->projectId
+            ]);
+        }
+    }
 }
 

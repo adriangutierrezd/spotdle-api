@@ -42,4 +42,13 @@ class UpdateTaskRequest extends FormRequest
             ];
         }
     }
+
+    protected function prepareForValidation()
+    {
+        if($this->projectId){
+            $this->merge([
+                'project_id' => $this->projectId
+            ]);
+        }
+    }
 }

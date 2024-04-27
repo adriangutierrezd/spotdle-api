@@ -9,6 +9,7 @@ use App\Http\Resources\TaskCollection;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use App\Policies\TaskPolicy;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
@@ -17,19 +18,34 @@ class TaskController extends Controller
     {
         $filter = new TasksFilter();
         $queryItems = $filter->transform($request);
-        $categories = Task::where([
+        $tasks = Task::where([
             ...$queryItems,
             'user_id' => $request->user()->id
-        ])->get();
-        return new TaskCollection($categories);
+        ])->with('project')->get();
+
+        return [
+            'data' => new TaskCollection($tasks),
+            'status' => 200,
+            'message' => 'Datos obtenidos correctamente'
+        ];
     }
 
     public function store(StoreTaskRequest $request)
     {
-        return new TaskResource(Task::create([
+        $task = new TaskResource(Task::create([
             ...$request->all(),
-            'user_id' => $request->user()->id
-        ]));
+            'date' => date('Y-m-d'),
+            'seconds' => 0,
+            'user_id' => $request->user()->id,
+            'started_at' => Carbon::parse($request->started_at)->toDateTimeString()
+        ])->with('project'));
+
+        return [
+            'data' => $task,
+            'status' => 201,
+            'message' => 'Recurso creado con éxito'
+        ];
+
     }
 
     public function update(UpdateTaskRequest $request, Task $task)
@@ -38,6 +54,12 @@ class TaskController extends Controller
             ...$request->all(),
             'user_id' => $request->user()->id
         ]);
+
+        return [
+            'data' => $task,
+            'status' => 200,
+            'message' => 'Recurso actualizado con éxito'
+        ];
     }
 
     public function destroy(Request $request, Task $task)
@@ -47,5 +69,12 @@ class TaskController extends Controller
         }
 
         $task->delete();
+
+
+        return [
+            'data' => [],
+            'status' => 200,
+            'message' => 'Recurso eliminado con éxito'
+        ];
     }
 }
