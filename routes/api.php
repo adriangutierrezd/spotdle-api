@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TaskController;
 use App\Models\User;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -50,6 +51,20 @@ Route::post('sign-up', function(Request $request){
             'status' => 201,
             'message' => 'Recurso creado con éxito'
         ];
+    }catch(QueryException $e){
+        if($e->errorInfo && $e->errorInfo[1] == 1062){
+            return [
+                'data' => [],
+                'status' => 400,
+                'message' => 'El email ya está en uso'
+            ];
+        }else{
+            return [
+                'data' => [],
+                'status' => 500,
+                'message' => 'Ha ocurrido un error'
+            ];
+        }
     }catch(Exception $e){
         return [
             'data' => [],
