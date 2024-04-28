@@ -22,7 +22,7 @@ class StoreTaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'description' => ['required', 'max:100'],
+            'description' => ['sometimes', 'max:100'],
             'projectId' => [
                 'sometimes',
                 function ($attribute, $value, $fail) {

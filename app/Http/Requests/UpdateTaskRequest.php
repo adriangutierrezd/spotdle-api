@@ -26,7 +26,7 @@ class UpdateTaskRequest extends FormRequest
         $method = $this->method();
         if($method === 'PUT'){
             return [
-                'description' => ['required', 'max:100'],
+                'description' => ['sometimes', 'max:100'],
                 'projectId' => [
                     'sometimes',
                     function ($attribute, $value, $fail) {
